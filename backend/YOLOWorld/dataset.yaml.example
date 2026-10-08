@@ -1,0 +1,22 @@
+# YOLOE 训练数据集配置示例
+# ---------------------------------------------------------------
+# 用法：
+#   1. 复制为 dataset.yaml：cp dataset.yaml.example dataset.yaml
+#   2. 修改下方 path / names 字段为你自己的数据集
+#   3. 训练时通过 --data dataset.yaml 传给 train_yoloe.py
+# ---------------------------------------------------------------
+
+# 数据集根目录（推荐使用绝对路径，避免相对路径在不同 cwd 下出错）
+path: /absolute/path/to/your/dataset
+
+# 训练 / 验证 / 测试图片目录，路径相对于上面的 path
+train: images/train
+val: images/val
+test: images/test        # 可选；没有测试集时可删掉这一行
+
+# 类别表：id -> 类别名（id 从 0 开始连续递增）
+names:
+  0: person
+  1: car
+  2: bicycle
+  # 在此继续追加 …

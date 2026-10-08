@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/zhikan-mark.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0c1113" />
+    <meta name="description" content="智瞰万象，以自然语言定义视觉任务。开放词汇检测、视觉大模型复核与专用模型训练的一体化工作空间。" />
+    <title>智瞰万象 · 开放世界智能视觉平台</title>
+    <script>
+      // Respect a saved preference; new sessions open in the graphite theme.
+      (function () {
+        try {
+          document.documentElement.classList.toggle('dark', localStorage.getItem('sod_theme') !== 'light')
+        } catch (e) {}
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

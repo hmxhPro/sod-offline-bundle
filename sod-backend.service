@@ -1,0 +1,59 @@
+# ============================================================================
+# SOD 后端 systemd 服务单元
+# ----------------------------------------------------------------------------
+# install.sh 会替换 __SOD_HOME__ 与 __SOD_USER__ 后安装到
+# /etc/systemd/system/sod-backend.service。
+#
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now sod-backend
+#   sudo systemctl status sod-backend
+#   journalctl -u sod-backend -f          # 查看日志
+#
+# 说明：离线开关以“真实环境变量”形式注入（应用不会从 .env 把这些键写入
+# os.environ，必须在此显式声明），确保 ultralytics / HuggingFace 完全离线、
+# 不发起任何联网请求（版本检查 / 遥测 / 资源下载）。
+# ============================================================================
+[Unit]
+Description=SOD Video Object Detection Backend (FastAPI/uvicorn)
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=__SOD_USER__
+WorkingDirectory=__SOD_HOME__/backend
+
+# ── 离线 / 运行环境变量 ─────────────────────────────────────────────────────
+Environment=HF_HUB_OFFLINE=1
+Environment=TRANSFORMERS_OFFLINE=1
+Environment=HF_DATASETS_OFFLINE=1
+Environment=YOLO_OFFLINE=1
+Environment=ULTRALYTICS_OFFLINE=1
+# ultralytics 配置目录（含 Arial 字体），与 $HOME 解耦，便于服务化运行。
+# 注意：ultralytics 会在此目录下再建 Ultralytics/ 子目录，故字体实际位于
+# __SOD_HOME__/.config/Ultralytics/（install.sh 已据此放置）。
+Environment=YOLO_CONFIG_DIR=__SOD_HOME__/.config
+# 应用 visualizer 的 CJK 字体（独立于 ultralytics 字体逻辑），指向随包字体，
+# 否则检测框中文标签会显示成 ???。
+Environment=SOD_CJK_FONT=__SOD_HOME__/.config/Ultralytics/Arial.Unicode.ttf
+# 抑制 FFmpeg/libav 解码器噪声日志
+Environment=OPENCV_FFMPEG_LOGLEVEL=-8
+Environment=AV_LOG_FORCE_NOCOLOR=1
+# 让 conda-pack 解包后的环境优先（库路径已由 conda-unpack 修正）
+Environment=CONDA_PREFIX=__SOD_HOME__/env
+Environment=PATH=__SOD_HOME__/env/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+ExecStart=__SOD_HOME__/env/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1 --timeout-graceful-shutdown 30
+
+# 优雅停机：留足时间让在途检测任务打包、训练子进程组回收（见 app/main.py lifespan）
+TimeoutStopSec=40
+KillMode=mixed
+Restart=on-failure
+RestartSec=5
+
+# 日志走 journald（也可在 .env 设 LOG_DIR 写文件）
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

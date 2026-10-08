@@ -1,0 +1,102 @@
+# Local environment and secrets (keep configuration examples)
+.env
+.env.*
+!.env.example
+!.env.*.example
+!.env.sample
+!.env.template
+*.pem
+*.key
+.claude/settings.local.json
+/.config/
+# Offline font/config bundle also contains machine-local settings and cache
+/ultralytics/Ultralytics.tar.gz
+/.codex/
+/.aws/
+
+# Python environments, caches and build outputs
+/conda/
+/env/
+.venv/
+venv/
+ENV/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+build/
+dist/
+
+# Frontend dependencies and generated files (keep package-lock.json)
+node_modules/
+.vite/
+coverage/
+*.tsbuildinfo
+
+# Windows portable runtimes, downloads, database and process state
+/windows/runtime/
+/windows/downloads/
+/windows/pgdata/
+/windows/run/
+
+# Models and weights; match TorchScript filenames, not TypeScript source
+*.pth
+*.pt
+*.ckpt
+*.onnx
+*.safetensors
+mobileclip*.ts
+weights/
+
+# Uploaded data, annotations, detection and training outputs
+/backend/uploads/
+/backend/datasets/
+/backend/runs/
+/backend/annotations/
+/backend/results/
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal
+
+# Logs and temporary files
+logs/
+*.log
+*.log.*
+*.pid
+*.pid.lock
+.cache/
+*.tmp
+*.temp
+
+# Large local videos (keep screenshots and other project images)
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Personal resume files unrelated to the application
+/latex_resume_project/
+/latex_resume_project.rar
+
+# Operating system and editor files
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
